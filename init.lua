@@ -1,39 +1,29 @@
-hs.logger.defaultLogLevel="info"
+HOME = os.getenv("HOME")
+HS_HOME = HOME.."/.config/hammespoon"
+
+
+hs.logger.defaultLogLevel="debug"
+
 hs.loadSpoon("SpoonInstall")
+hs.loadSpoon("ReloadConfiguration")
 
---smart config reloading
---hs.loadSpoon("ReloadConfiguration")
---spoon.ReloadConfiguration:start()
+Install = spoon.SpoonInstall
+Install.use_syncinstall = true
 
---sync notifications are easier to read
-spoon.SpoonInstall.use_syncinstall = true
+
+col = hs.drawing.color.x11
 
 hyper       = {"cmd","alt","ctrl"}
 shift_hyper = {"cmd","alt","ctrl","shift"}
 ctrl_cmd    = {"cmd","ctrl"}
 
---abbreviations
-col = hs.drawing.color.x11
-Install=spoon.SpoonInstall
 
-for file in hs.fs.dir("include/") do
-    if file:sub(-4) == '.lua' then
-        local name = "include." .. file:sub(1, -5) -- name.lua -> include.name
-        require(name)
-    end
-end
+configWatchPaths = {
+	HS_HOME.."/init.lua",
+	HS_HOME.."/lib",
+	HS_HOME.."/include"
+}
 
-function reloadConfig(files)
-    doReload = false
-    for _,file in pairs(files) do
-        if file:sub(-4) == ".lua" then
-            doReload = true
-        end
-    end
-    if doReload then
-        hs.reload()
-    end
-end
-configWatcher = hs.pathwatcher.new(os.getenv("HOME") .. "/hammerspoon/", reloadConfig):start()
-Install:andUse("FadeLogo", {config = {default_run = 0.6,}, start = true})
+Install:andUse("ReloadConfiguration", {watch_paths=configWatchPaths,start=true})
+Install:andUse("FadeLogo", {config = {default_run = 0.3,}, start = true})
 hs.notify.new({title = 'Hammerspoon', informativeText = 'Config loaded'}):send()

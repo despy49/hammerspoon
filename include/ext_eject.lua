@@ -1,4 +1,4 @@
-hs.loadSpoon("EjectMenu")
+--[[hs.loadSpoon("EjectMenu")
 Install:andUse("EjectMenu", {
 	config = {
         		eject_on_lid_close = false,
@@ -6,5 +6,5 @@ Install:andUse("EjectMenu", {
                 	show_in_menubar = true,
                 	notify = true,
                  },
-        hotkeys = { ejectAll = { hyper, "=" } }, start = true,
-})
+        hotkeys = { ejectAll = { hyper, "=" } }, start = true,}
+)]]
